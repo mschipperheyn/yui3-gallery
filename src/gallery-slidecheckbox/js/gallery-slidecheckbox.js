@@ -1,5 +1,3 @@
-YUI().add('gallery-slidecheckbox', function(Y) {
-	
 	var SLIDECHECKBOX='SlideCheckbox',
 	WRAPPER = 'wrapper',
 	SLIDER = 'slider',
@@ -186,5 +184,3 @@ YUI().add('gallery-slidecheckbox', function(Y) {
 			}
 		}
 	);
-
-},'@VERSION@',{requires:['node-base','anim-base','anim-easing','base-build',"event-key", 'event-move', 'node-style', 'gallery-makenode','dd-drag','dd-constrain']});
