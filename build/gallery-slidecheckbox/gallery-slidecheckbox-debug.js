@@ -80,6 +80,7 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 				);
 			},destructor : function(){
 				this.anim.stop().destroy();
+				this.src = null;
 			},
 			goLeft : function(){
 				this.to = this.left;
