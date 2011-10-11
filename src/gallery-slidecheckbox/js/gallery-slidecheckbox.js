@@ -1,4 +1,4 @@
-	var SLIDECHECKBOX='SlideCheckbox',
+		var SLIDECHECKBOX='SlideCheckbox',
 	WRAPPER = 'wrapper',
 	SLIDER = 'slider',
 	SLIDERWRAP = 'sliderwrap',
@@ -19,12 +19,13 @@
 			renderUI : function() {
 				this.src = this.get('srcNode').addClass(this.getClassName('hidden'));
 				this.get('contentBox').append(this._makeNode()).append(this.src);
-
+				
 				this._locateNodes();
-
+				
 				var leftX = this._replacePx(this._labelOnNode.one('span').getStyle('width')),
 				rightX = this._replacePx(this._labelOffNode.one('span').getStyle('width'));
-
+			
+				//-5 to compensate for margin-left 5px in off label
 				if(leftX > rightX){
 					this._labelOffNode.one('span').setStyle('width',leftX);
 					this.width = this._labelOnNode.get('offsetWidth');
@@ -43,27 +44,35 @@
 				this._wrapperNode.setStyle('width',this._wrapWidth).all('> .edge').setStyle('backgroundColor',this.get('backgroundColor'));
 			},
 			bindUI : function(){
-				var xy = this._wrapperNode.getXY();
+				this.disabled = this.src.get('disabled');
+				
 				var dd = new Y.DD.Drag({
 					node: this._sliderwrapNode,
 					activeHandle : this._handleNode,
 					lock: this.disabled
-				}).plug(Y.Plugin.DDConstrained, {
-					constrain:{
-						top:xy[1],
-						bottom:xy[1] + this._wrapperNode.get('offsetHeight'),
-						right:xy[0] + this._slideWrapWidth,
-						left:xy[0] + this.left
-					}
 				});
+				
+				this._addDragConstraint(dd);
+				
 				dd.on('drag:drag',function(e){
+					var xy = this._wrapperNode.getXY();
+					
+					//If the node is repositioned we need to reapply the constraint
+					if(xy[1] !== dd.actXY[1]){
+						dd.unplug();
+						this._addDragConstraint(dd);
+						e.halt(true);
+					}
+					
 					if(dd.actXY[0] % 2 === 0)
 						this.lastX = this.currentX;
 					this.currentX = dd.actXY[0];
+					
 				}, this);
+				
 				dd.on('drag:end',this.move, this);
+				
 			},syncUI : function(){
-				this.disabled = this.src.get('disabled');
 				this._sliderwrapNode.setStyle('left',
 					this.src.get('checked')?  0 : this.left
 				);
@@ -94,6 +103,17 @@
 				}else{
 					this.goRight();
 				}
+			},
+			_addDragConstraint : function(dd){
+				var xy = this._wrapperNode.getXY();
+				dd.plug(Y.Plugin.DDConstrained, {
+					constrain:{
+						top:xy[1],
+						bottom:xy[1] + this._wrapperNode.get('offsetHeight'),
+						right:xy[0] + this._slideWrapWidth,
+						left:xy[0] + this.left
+					}
+				});
 			},
 			_defaultCB : function(el) {
 				return null;
@@ -184,3 +204,4 @@
 			}
 		}
 	);
+
