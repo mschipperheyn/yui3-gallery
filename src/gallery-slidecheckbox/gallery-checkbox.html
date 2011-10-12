@@ -6,21 +6,6 @@
 <script src="http://yui.yahooapis.com/3.4.1/build/yui/yui-debug.js"></script>
 <script>
 YUI({
-	base: './',
-	modules:{
-			'slidecheckbox-skin-css':{
-				fullpath:'gallery-slidecheckbox/assets/skins/sam/gallery-slidecheckbox.css',
-				type: 'css'
-			},
-			'slidecheckbox-core-css':{
-				fullpath:'gallery-slidecheckbox/assets/gallery-slidecheckbox-core.css',
-				type: 'css'
-			},
-			'gallery-slidecheckbox':{
-				fullpath:'gallery-slidecheckbox/gallery-slidecheckbox.js',
-				requires:['node-base','anim-base','anim-easing','base-build','event-key', 'event-move', 'widget', 'node-style', 'gallery-makenode','dd-drag','dd-constrain','slidecheckbox-core-css','slidecheckbox-skin-css']
-			}
-		},
 	filter:'debug'
 	}
 ).use('gallery-slidecheckbox',function(Y){

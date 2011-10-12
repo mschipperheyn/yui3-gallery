@@ -1,6 +1,7 @@
 YUI.add('gallery-slidecheckbox', function(Y) {
 
-		var SLIDECHECKBOX='SlideCheckbox',
+	var SLIDECHECKBOX='SlideCheckbox',
+	CBX = 'contentBox',
 	WRAPPER = 'wrapper',
 	SLIDER = 'slider',
 	SLIDERWRAP = 'sliderwrap',
@@ -20,30 +21,27 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 			lastX : null,
 			renderUI : function() {
 				this.src = this.get('srcNode').addClass(this.getClassName('hidden'));
-				this.get('contentBox').append(this._makeNode()).append(this.src);
+				this.get(CBX).append(this._makeNode()).append(this.src);
 				
 				this._locateNodes();
 				
 				var leftX = this._replacePx(this._labelOnNode.one('span').getStyle('width')),
-				rightX = this._replacePx(this._labelOffNode.one('span').getStyle('width'));
-			
-				//-5 to compensate for margin-left 5px in off label
+				rightX = this._replacePx(this._labelOffNode.one('span').getStyle('width')), 
+				width = this._labelOnNode.get('offsetWidth');
+				
 				if(leftX > rightX){
 					this._labelOffNode.one('span').setStyle('width',leftX);
-					this.width = this._labelOnNode.get('offsetWidth');
 				}else{
 					this._labelOnNode.one('span').setStyle('width',rightX);
-					this.width = this._labelOffNode.get('offsetWidth');
+					width = this._labelOnNode.get('offsetWidth');
 				}
 				
 				this.left = -this._labelOnNode.get('offsetWidth') + 3;
 
-				this._slideWrapWidth = 3 * this.width + 10;
-				this._wrapWidth = 2 * this.width;
-				this._handleNode.setStyle('width',this.width - 3);
+				this._slideWrapWidth = 3 * width + 10;
+				this._handleNode.setStyle('width',width - 3);
 				this._sliderwrapNode.setStyle('width',this._slideWrapWidth);
-				this._sliderNode.setStyle('width',this._slideWrapWidth);
-				this._wrapperNode.setStyle('width',this._wrapWidth).all('> .edge').setStyle('backgroundColor',this.get('backgroundColor'));
+				this._wrapperNode.setStyle('width',2 * width).all('> .edge').setStyle('backgroundColor',this.get('backgroundColor'));
 			},
 			bindUI : function(){
 				this.disabled = this.src.get('disabled');
@@ -52,7 +50,8 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 					node: this._sliderwrapNode,
 					activeHandle : this._handleNode,
 					lock: this.disabled
-				});
+				}),
+				cb = this.get(CBX);
 				
 				this._addDragConstraint(dd);
 				
@@ -66,13 +65,23 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 						e.halt(true);
 					}
 					
-					if(dd.actXY[0] % 2 === 0)
+					if(dd.actXY[0] % 2 === 0){
 						this.lastX = this.currentX;
+					}
 					this.currentX = dd.actXY[0];
 					
 				}, this);
 				
 				dd.on('drag:end',this.move, this);
+				
+				cb.on('focus',function(){
+					cb.on('key',this.goLeft,'down:37',this);
+					cb.on('key',this.goRight,'down:39',this);
+					cb.on('key',this.move,'down:32',this);
+				},this);
+				cb.on('blur',function(){
+					cb.detach('key');
+				},this);
 				
 			},syncUI : function(){
 				this._sliderwrapNode.setStyle('left',
@@ -80,7 +89,7 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 				);
 			},destructor : function(){
 				this.anim.stop().destroy();
-				this.src = null;
+				this.src=null;
 			},
 			goLeft : function(){
 				this.to = this.left;
@@ -94,7 +103,7 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 				this.from = this._replacePx(this._sliderwrapNode.getComputedStyle('left'));
 				
 				if(this.lastX !== null){
-					if(this.currentX < this.lastX){
+					if(this.currentX < this.lastX || this.from === this.left){
 						this.goLeft();
 					}else{
 						this.goRight();
@@ -124,24 +133,6 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 			_onClick : function(e){
 				this.move();
 			},
-			_onSwipe : function(e){
-				var item = e.currentTarget;
-				item.setData("swipeStart", e.pageX);
- 
-				item.once("gesturemoveend", function(b) {
- 
-					var swipeStart = item.getData("swipeStart"),
-						swipeEnd = e.pageX,
-						isSwipeLeft = (swipeStart - swipeEnd) > MIN_SWIPE;
-
-					this.from = e.pageX;
-					if(isSwipeLeft){
-						this.goLeft();
-					}else{
-						this.goRight();
-					}
-				},this);
-			},
 			/*
 			 * React to changes to the source node that may occur by other components.
 			 */
@@ -149,8 +140,9 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 				
 			},
 			_execute : function(){
-				if(this.disabled)
+				if(this.disabled){
 					return;
+				}
 
 				this.src.set('checked',!this.src.get('checked'));
 				
@@ -195,10 +187,7 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 			_EVENTS:{
 				slider: [
 					{type: 'click',fn:'_onClick'}
-				]/*,
-				handle:[
-					{type: 'gesturemovestart', fn:'_onSwipe'}
-				]*/
+				]
 			},
 			HTML_PARSER: {
 				value: function (srcNode) {
@@ -207,7 +196,6 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 			}
 		}
 	);
-
 
 
 

@@ -17,6 +17,7 @@
 .yui3-slidecheckbox-labelOff span{margin-left:5px;padding:4px 0 5px 4px;}
 
 .yui3-slidecheckbox-hidden{position:absolute;left:-10000px;top:-10000px;}
+.yui3-slidecheckbox-focused .yui3-slidecheckbox-wrapper{outline:silver dotted thin;}
 .yui3-slidecheckbox-wrapper > .edge{width:4px;height:27px;z-index:2;position:absolute;}
 .yui3-slidecheckbox-wrapper > .edge.lt{left:0;}
 .yui3-slidecheckbox-wrapper > .edge.rt{right:0;}
