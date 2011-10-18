@@ -139,6 +139,7 @@
 				
 			},
 			_execute : function(){
+				this.focus();
 				if(this.disabled){
 					return;
 				}
