@@ -27,7 +27,8 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 				var leftX = this._labelOnNode.one('span').get('offsetWidth'),
 				rightX = this._labelOffNode.one('span').get('offsetWidth'), 
 				width = this._labelOnNode.get('offsetWidth'),
-				ios5 = this.getSkinName().indexOf('ios5') > -1;
+				skin = this.getSkinName(),
+				ios5 = skin? skin.indexOf('ios5') > -1 : null;
 
 				if(leftX > rightX){
 					this._labelOffNode.one('span').setStyle('width',leftX);
