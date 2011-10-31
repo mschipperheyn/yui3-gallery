@@ -86,7 +86,10 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 				cb.on('focus',function(){
 					cb.on('key',this.goLeft,'down:37',this);
 					cb.on('key',this.goRight,'down:39',this);
-					cb.on('key',this.move,'down:32',this);
+					cb.on('key',function(e){
+						e.preventDefault();
+						this.move();
+					},'down:32',this);
 				},this);
 				cb.on('blur',function(){
 					cb.detach('key');
@@ -140,10 +143,11 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 				return null;
 			},
 			_onClick : function(e){
+				e.preventDefault();
 				this.move();
 			},
 			_execute : function(){
-				this.get(CBX).focus();
+				this.focus();
 				if(this.disabled){
 					return;
 				}
