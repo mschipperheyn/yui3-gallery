@@ -277,4 +277,4 @@ Y.namespace('Twitter').Status = Twitter;
 
 
 
-}, '@VERSION@' ,${component.details.hash});
+}, '@VERSION@' ,{skinnable:true, requires:['widget-base','substitute', 'gallery-torelativetime', 'jsonp', 'base-build']});
