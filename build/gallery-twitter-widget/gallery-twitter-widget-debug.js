@@ -16,10 +16,10 @@ Twitter = Y.Base.create("Twitter", Y.Widget, [], {
 	
 	ENTRY_TEMPLATE:
 	'<div class="twitter-update">{img}'+
-		'<div class="twitter-entry"><div class="writer">{userTplt}</div>{text} '+
-			'<span class="twitter-timestamp">{relativeTime}</span>'+
-		'</div>'+
+		'<div class="twitter-entry"><div class="writer">{userTplt}</div>{text} {time}</div>'+
 	'</div>',
+	
+	TIME_TEMPLATE: '<span class="twitter-timestamp">{relativeTime}</span>',
 
 	USER_TEMPLATE: '<a href="{url}" class="twitter-username">{username}</a>',
 	
@@ -159,7 +159,7 @@ Twitter = Y.Base.create("Twitter", Y.Widget, [], {
 	},
 
 	_createEntry: function (entry) {
-		
+		var tmp = this.get('showTime');
 		var res = Y.Lang.sub(this.ENTRY_TEMPLATE, entry)
 					.replace(RE_LINK,'<a href="$1">$1</a>')
 					.replace(RE_USERNAME,
@@ -170,9 +170,14 @@ Twitter = Y.Base.create("Twitter", Y.Widget, [], {
 						'<a class="twitter-hash" href="' +
 							Twitter.TREND_URL	+ 
 						'%23$1"/>#$1</a>'),
+		time = this.get('showTime')? Y.Lang.sub(this.TIME_TEMPLATE, entry) : "",
 		user = this.get('showHandle')? Y.Lang.sub(this.USER_TEMPLATE,entry) : "",
 		img = this.get('showPhoto')? Y.Lang.sub(this.PHOTO_TEMPLATE,entry) : "";
-		return Y.Lang.sub(res,{img:img,userTplt:user});
+		return Y.Lang.sub(res,{
+			img:img,
+			userTplt:user,
+			time:time
+		});
 	},
 
 	_defErrorFn: function () {
@@ -264,10 +269,18 @@ Twitter = Y.Base.create("Twitter", Y.Widget, [], {
 		},
 		
 		/*
-		 *
+		 * Should we hide the skin?
 		 */
 		 hideSkin:{
 			value: false,
+			validator: Y.Lang.isBoolean
+		 },
+		 
+		 /*
+		 * Should we show the relative time?
+		 */
+		 showTime:{
+			value: true,
 			validator: Y.Lang.isBoolean
 		 }
 	}
