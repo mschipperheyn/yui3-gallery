@@ -1,0 +1,37 @@
+<html>
+<head>
+<style>
+textarea{min-height:100px;max-height:150px;}
+.textarea-expander textarea,.textarea-expander pre{min-height:100px;}
+</style>
+<script src="http://yui.yahooapis.com/3.6.0pr2/build/yui/yui-debug.js"></script>
+<script type="text/javascript">
+ 
+    YUI({
+        modules: {
+			'gallery-textarea-expander-css':{
+				fullpath:'assets/skins/sam/gallery-textarea-expander-skin.css',
+				type: 'css'
+			},
+			'gallery-textarea-expander-core-css':{
+				fullpath:'assets/gallery-textarea-expander-core.css',
+				type: 'css'
+			},
+            'gallery-textarea-expander': {
+                fullpath: 'build_tmp/gallery-textarea-expander-debug.js',
+                requires: ['plugin','gallery-textarea-expander-css','gallery-textarea-expander-core-css'],
+				skinnable:['sam']
+            }
+        },
+		filter:'debug'
+    }).use("node", 'gallery-textarea-expander', function(Y) {
+        Y.all("textarea").plug(Y.TextareaExpander);
+    });
+</script>
+</head>
+<body>
+    <form>
+        <textarea>Hello world</textarea>
+    </form>
+</body>
+</html>
