@@ -29,14 +29,14 @@ Y.extend(TextareaExpander, Y.Plugin.Base, {
 					//Overflow is blocked and we are overflowing. We need to stop textexpansion
 					overflow = true;
 					txt.setStyle('overflowY','auto');
-					span.setStyle('height','auto');
 				}else if(overflow && txt.get('scrollHeight') < maxHeight){
 					//Overflow is not blocked and we have removed enough text to remove the scrollbar again. We need to restart text expansion
 					overflow = false;
 					txt.setStyle('overflowY','none');
-					span.setStyle('height',txt.get('height'));
 				}
 			}
+			
+			//TODO: one remaining issue. If you paste a text that is larger than the scrollHeight and the textarea has not expanded yet. It will not.
 			
 			if(!overflow){
 				span.set('text',txt.get('value'));
