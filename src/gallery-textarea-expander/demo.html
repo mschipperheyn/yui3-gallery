@@ -1,8 +1,11 @@
 <html>
 <head>
 <style>
-textarea{max-height:150px;}
-textarea,pre{min-height:100px;max-height:150px;}
+#maxheight textarea,#maxheight pre{max-height:150px;}
+#minheight textarea,#minheight pre{min-height:75px;}
+#minheight textarea,#minheight pre,#minheight .textarea-expander{width:250px;}
+#minmaxheight textarea,#minmaxheight pre{min-height:25px;max-height:150px;}
+#minmaxheight textarea,#minmaxheight pre,#minmaxheight .textarea-expander{width:125px;}
 </style>
 <script src="http://yui.yahooapis.com/3.4.0/build/yui/yui-debug.js"></script>
 <script type="text/javascript">
@@ -30,10 +33,36 @@ textarea,pre{min-height:100px;max-height:150px;}
 </script>
 </head>
 <body>
-XXXX
+Max height
+<div id="maxheight">
     <form>
         <textarea>Hello world</textarea>
     </form>
-YYYYY
+</div>
+
+<br/>
+Min-height
+<div id="minheight">
+    <form>
+        <textarea>Hello world</textarea>
+    </form>
+</div>
+<br/>
+
+Min-height and Max-height
+<div id="minmaxheight">
+    <form>
+        <textarea>Hello world</textarea>
+    </form>
+</div>
+<br/>
+
+Un-constrained
+<div id="unconstrained">
+    <form>
+        <textarea>Hello world</textarea>
+    </form>
+</div>
+
 </body>
 </html>
