@@ -55,4 +55,4 @@ Y.TextareaExpander = TextareaExpander;
 
 
 
-}, '@VERSION@' ,{skinnable:true, supersedes:['plugin','node-style'], requires:['plugin','node-style'], optional:['plugin','node-style']});
+}, '@VERSION@' ,{requires:['plugin','node-style'], skinnable:true});
