@@ -12,7 +12,7 @@ Y.extend(HandlebarsLoader, Y.Base, {
 	* Retrieves the raw content of the Handlebars template
 	*/
 	raw: function(id){
-		var el = Y.one(id);
+		var el = Y.one('#' + id);
 		if(el){
 			return el.get('innerHTML');
 		}

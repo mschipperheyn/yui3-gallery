@@ -17,7 +17,7 @@
 			type : 'box',
 			url : 'http://assets.freelas.net/91/images/themes/frl/logoNLen.png'
 		};
-		var template = handlebars.template('#some-photo-hbs');
+		var template = handlebars.template('some-photo-hbs');
 		Y.one('#photo').set('innerHTML',template(cfg));
 		
 		cfg = {
@@ -25,13 +25,13 @@
 		};
 		Y.one('#photo2').set('innerHTML',template(cfg));
 		
-		Y.one('#raw').set('innerText',handlebars.raw('#some-photo-hbs'));
+		Y.one('#raw').set('innerText',handlebars.raw('some-photo-hbs'));
 		
 		handlebars.clear();
 		
-		handlebars.preCompile(['#some-photo-hbs']);
+		handlebars.preCompile(['some-photo-hbs']);
 		
-		Y.one('#photo3').set('innerHTML',handlebars.template('#some-photo-hbs')(cfg));
+		Y.one('#photo3').set('innerHTML',handlebars.template('some-photo-hbs')(cfg));
     });
 </script>
 
