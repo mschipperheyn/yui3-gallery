@@ -18,7 +18,7 @@ Y.extend(HandlebarsLoader, Y.Base, {
 		}
 	},
 	/**
-	* Precompiles and array of templates and stores the result in the cache
+	* Precompiles an array of templates and stores the result in the cache
 	*/
 	preCompile: function(ids){
 		for(var x =0;x < ids.length;x++){
@@ -39,10 +39,46 @@ Y.extend(HandlebarsLoader, Y.Base, {
 			}
 		}
 		throw "Template not found: " + id;
+	},
+	/**
+	* Load one or more handlebars templates and put the resulting content in the header
+	* templates are expected to have a encompassing <script id="some-id" type="text/x-handlebars-template">
+	* url: The url that retrieves the templates
+	* config.process: Compiles the template after loading
+	* config.sync: Executes the load in a synchronous manner. Necessary if you use load as part of a view initialization
+	* config.callback: Define a callback function that is called with the resulting compiled template (requires process to be true)
+	*/
+	load:function(url, config){
+		Y.io(url,{
+			sync:config.sync || false,
+			on:{
+				success:function(transactionId, response){
+					var hd = Y.one('head');
+					hd.append(response.responseText);
+					
+					if(config.process){
+						hd.all('script[type="text/x-handlebars-template"]').each(
+							function(node){
+								var tmp = this.template(node.get('id'));
+								if(config.callback){
+									config.callback(tmp);									
+								}
+								
+							}, 
+						this);
+					}
+				},
+				failure:function(){
+					throw "Handlebars: failed to retrieve url: " + url;
+				}
+			},
+			context:this
+		});
+	},
 	/**
 	* Clears the cache
 	*/
-	},clear: function(){
+	clear: function(){
 		this.templates = {};
 	},destructor:function(){
 		this.templates = null;
@@ -53,4 +89,4 @@ Y.MSA.HandlebarsLoader = HandlebarsLoader;
 
 
 
-}, '@VERSION@' ,{skinnable:false, requires:['node-base','handlebars-base','handlebars-compiler','base-base']});
+}, '@VERSION@' ,{skinnable:false, requires:['node-base','handlebars-base','handlebars-compiler','base-base','io-base']});
