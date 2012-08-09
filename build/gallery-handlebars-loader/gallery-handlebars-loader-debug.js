@@ -16,6 +16,7 @@ Y.extend(HandlebarsLoader, Y.Base, {
 		if(el){
 			return el.get('innerHTML');
 		}
+		return null;
 	},
 	/**
 	* Precompiles an array of templates and stores the result in the cache
@@ -29,19 +30,28 @@ Y.extend(HandlebarsLoader, Y.Base, {
 	* Retrieve a compiled template by node id
 	*/
 	template: function(id){
-		if(this.templates[id]){
-			return this.templates[id];
-		}else{
-			var raw = this.raw(id);
-			if(raw){
+		var self = this, raw;
+		
+		if(!Y.Object.hasKey(this.templates,id)){
+		
+			raw = this.raw(id);
+			
+			if(raw === null){
+				if(this.get('autoLoad')){
+					this.load(
+						this.get('comboLoader') + this.get('idConvert')(id),
+						{
+							process:true,
+							sync:true
+						}
+					);
+				}
+			}else{
 				this.templates[id] = Y.Handlebars.compile(raw);
-				return this.templates[id];
 			}
 		}
 		
-		Y.log("Template not found: " + id);
-		
-		return null;
+		return this.templates[id];
 	},
 	/**
 	* Load one or more handlebars templates and put the resulting content in the header
@@ -63,6 +73,7 @@ Y.extend(HandlebarsLoader, Y.Base, {
 						hd.all('script[type="text/x-handlebars-template"]').each(
 							function(node){
 								var tmp = this.template(node.get('id'));
+							
 								if(config.callback){
 									config.callback(tmp);									
 								}
@@ -89,6 +100,28 @@ Y.extend(HandlebarsLoader, Y.Base, {
 		}
 	},destructor:function(){
 		this.templates = null;
+	}
+},{
+	ATTRS: {
+		/**
+		 * turns on autoLoading through the comboLoader/idConvert
+		 */
+		autoLoad:{
+			value : false
+		},
+		/**
+		 * comboloader url to be used in autoload scenario's
+		 */
+		comboLoader:{},
+		/**
+		 * the idConvert function is intended to automatically convert a supplied id into a remote loadable file reference
+		 * e.g. inbox-message_en-hbs is converted to en/inbox/message.hbs
+		 */
+		idConvert:{
+			value:function(id){
+				return id;
+			}
+		}
 	}
 });
 Y.namespace('MSA');
