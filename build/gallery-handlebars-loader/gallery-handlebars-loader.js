@@ -78,8 +78,12 @@ Y.extend(HandlebarsLoader, Y.Base, {
 	/**
 	* Clears the cache
 	*/
-	clear: function(){
-		this.templates = {};
+	clear: function(id){
+		if(id){
+			delete this.templates[id];
+		}else{
+			this.templates = {};
+		}
 	},destructor:function(){
 		this.templates = null;
 	}
