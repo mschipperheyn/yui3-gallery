@@ -38,7 +38,9 @@ Y.extend(HandlebarsLoader, Y.Base, {
 				return this.templates[id];
 			}
 		}
-		throw "Template not found: " + id;
+		
+		
+		return null;
 	},
 	/**
 	* Load one or more handlebars templates and put the resulting content in the header
