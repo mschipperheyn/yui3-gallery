@@ -47,6 +47,17 @@ Busy.ATTRS =
 		validator: Y.Lang.isString
 	},
 	/**
+	 * When defined, the busy overlay with take the globalNode as default target
+	 * You can still define a custom node in the data-busy attribute of the selector
+	 * @attribute globalNode
+	 * @type node|selector
+	 * @default null
+	*/
+	globalNode:{
+		value:null,
+		setter: Y.Node
+	},
+	/**
 	 * CSS class to apply to the overlay.
 	 *
 	 * @attribute css
@@ -71,9 +82,14 @@ Y.extend(Busy, Y.Base,
 		Y.delegate('click',function(e){
 			if(this.isVisible())
 				this.hide();
-				
-			this.setVisible(Y.one(e.currentTarget.getData('busy')),true);
+			
+			var target = e.currentTarget.getData('busy');
+			
+			this.setVisible(target && !Y.Lang.isObject(target)? Y.one(target) : null,true);
+			
 		}, config.container, config.selector, this);
+		
+		Y.Global.on('msa-busy:show', this.show, this);
 		
 		Y.Global.on('msa-busy:hide',this.hide, this);
 		
@@ -85,6 +101,7 @@ Y.extend(Busy, Y.Base,
 	destructor: function()
 	{
 		this.o.remove(true);
+		this.set('globalNode',null);
 	},
 
 	/**
@@ -124,11 +141,13 @@ Y.extend(Busy, Y.Base,
 	 */
 	setVisible: function(node,visible)
 	{
+	
+		var node = node || this.get('globalNode');
 		this.target_region = null;
 
 		this.o.setStyle('display', (visible ? '' : 'none'));
 		
-		if(node)
+		if(node && visible)
 			this.resizeOverlay(node);
 			
 		this.o.setStyle('visibility', (visible ? '' : 'hidden'));

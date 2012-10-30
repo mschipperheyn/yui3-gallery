@@ -40,6 +40,10 @@ YUI({
 	Y.one('#hide').on('click',function(){
 		Y.Global.fire('msa-busy:hide');
 	});
+	
+	Y.one('#fire').on('click',function(){
+		Y.Global.fire('msa-busy:show');
+	});
 
 	
 });
@@ -61,6 +65,7 @@ YUI({
 
 	<a href="javascript:void(0);" class="show" data-busy="div.busyBottom">Show busy bottom container</a><br/><br/>
 </div>
+<a href="javascript:void(0);" id="fire">Fire show event</a><br/>
 <a href="javascript:void(0);" class="show">Show default container</a> | <a href="javascript:void(0);" id="hide">Hide busy</a> 
 </body>
 </html>

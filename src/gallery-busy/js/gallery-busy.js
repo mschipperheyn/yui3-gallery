@@ -83,9 +83,11 @@ Y.extend(Busy, Y.Base,
 			
 			var target = e.currentTarget.getData('busy');
 			
-			this.setVisible(target && !Y.Lang.isObject(target)? Y.one(target) : this.get('globalNode'),true);
+			this.setVisible(target && !Y.Lang.isObject(target)? Y.one(target) : null,true);
 			
 		}, config.container, config.selector, this);
+		
+		Y.Global.on('msa-busy:show', this.show, this);
 		
 		Y.Global.on('msa-busy:hide',this.hide, this);
 		
@@ -137,11 +139,13 @@ Y.extend(Busy, Y.Base,
 	 */
 	setVisible: function(node,visible)
 	{
+	
+		var node = node || this.get('globalNode');
 		this.target_region = null;
 
 		this.o.setStyle('display', (visible ? '' : 'none'));
 		
-		if(node)
+		if(node && visible)
 			this.resizeOverlay(node);
 			
 		this.o.setStyle('visibility', (visible ? '' : 'hidden'));
