@@ -33,29 +33,34 @@ YUI({
 
 	new Y.MSA.Busy({
 		container:'body',
-		selector:'.show'
+		selector:'.show',
+		globalNode: '#global'
 	});
 	
 	Y.one('#hide').on('click',function(){
 		Y.Global.fire('msa-busy:hide');
 	});
 
+	
 });
 </script>
 </head>
 <body style="background-color:#F5F5F5;" class="green" style="font-size:0.75em;">
-<div class="busyTop" style="border:1px solid silver;">
-text <br/>
-more text<br/>
+<div id="global">
+	<div class="busyTop" style="border:1px solid silver;">
+	text <br/>
+	more text<br/>
+	</div>
+
+	<a href="javascript:void(0);" class="show" data-busy="div.busyTop">Show busy top container</a><br/><br/>
+
+	<div class="busyBottom" style="border:1px solid silver;">
+	text <br/>
+	more text<br/>
+	</div>
+
+	<a href="javascript:void(0);" class="show" data-busy="div.busyBottom">Show busy bottom container</a><br/><br/>
 </div>
-
-<a href="javascript:void(0);" class="show" data-busy="div.busyTop">Show busy top container</a> | <a href="javascript:void(0);" id="hide">Hide busy</a> <br/><br/>
-
-<div class="busyBottom" style="border:1px solid silver;">
-text <br/>
-more text<br/>
-</div>
-
-<a href="javascript:void(0);" class="show" data-busy="div.busyBottom">Show busy bottom container</a>
+<a href="javascript:void(0);" class="show">Show default container</a> | <a href="javascript:void(0);" id="hide">Hide busy</a> 
 </body>
 </html>
