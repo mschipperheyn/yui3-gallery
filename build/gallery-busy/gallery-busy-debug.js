@@ -173,4 +173,4 @@ Y.MSA.Busy = Busy;
 
 
 
-}, '@VERSION@' ,${component.details.hash});
+}, '@VERSION@' ,{requires:['base','node-base','node-style','event-tap','event-delegate','node-screen']});
