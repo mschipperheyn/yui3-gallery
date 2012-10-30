@@ -89,7 +89,9 @@ Y.extend(Busy, Y.Base,
 			
 		}, config.container, config.selector, this);
 		
-		Y.Global.on('msa-busy:show', this.show, this);
+		Y.Global.on('msa-busy:show', function(e){
+			this.show(e && e.node);
+		}, this);
 		
 		Y.Global.on('msa-busy:hide',this.hide, this);
 		
@@ -192,4 +194,4 @@ Y.MSA.Busy = Busy;
 
 
 
-}, '@VERSION@' ,{requires:['base','node-base','node-style','event-tap','event-delegate','node-screen']});
+}, '@VERSION@' ,{skinnable:true, requires:['base','node-base','node-style','event-tap','event-delegate','node-screen']});
