@@ -47,9 +47,10 @@ Twitter = Y.Base.create("Twitter", Y.Widget, [], {
 		obj = {
 			count: this.get('count'),
 			d:(new Date()).getTime(), 
-			key:un
+			key:this.get('isQuery')? un : "from:" + un
 		},
-		url = Y.Lang.sub(this.get('isQuery')? Twitter.TREND_API_URI : Twitter.FEED_URI,obj).replace('#','%23');
+
+		url = Y.Lang.sub(Twitter.SEARCH_API_URI,obj).replace('#','%23');
 		
 		this._jsonpHandle = new Y.JSONPRequest(url, {
 			on: {
@@ -205,9 +206,7 @@ Twitter = Y.Base.create("Twitter", Y.Widget, [], {
 	
 	TREND_URL : 'https://twitter.com/#!/search/',
 
-	FEED_URI: 'http://search.twitter.com/search.json?q=from:{key}&count={count}&d={d}&callback={callback}',
-	
-	TREND_API_URI: 'http://search.twitter.com/search.json?q={key}&count={count}&d={d}&callback={callback}',
+	SEARCH_API_URI: 'http://search.twitter.com/search.json?q={key}&count={count}&d={d}&callback={callback}',
 	
 	ATTRS: {
 		/*
