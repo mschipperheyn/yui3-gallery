@@ -9,7 +9,7 @@ YUI.add('gallery-more-loader', function(Y) {
 * The server content can be returned as HTML. In that case, supply a container attribute to append/prepend to, 
 * or as XML or json, in that case, just listen for the load event and process appropriately.
 */
-var NME='MoreLoader',
+var NME='moreLoader',
 SRC = 'container',
 /**
 * Event generated at the start of the loading process. Could be used to activate a busy screen or disabling the load more button
@@ -50,7 +50,7 @@ Y.Base,
 			var src = this.get(SRC),
 			moreBtn = this.get('moreBtn');
 
-			this.publish(EVT_LOAD,  {defaultFn: this._defCompleteFn});
+			this.publish(EVT_LOAD,  {defaultFn: this._defCompleteFn, broadcast: 2});
 			this.publish(EVT_START,  {});
 			this.publish(EVT_ERROR,  {});
 			this.publish(EVT_MAX,  {});
@@ -68,6 +68,10 @@ Y.Base,
 					);
 				},this);
 			}
+			
+			//Fire a max event immediately upon loading so ui cleanup can be executed
+			if(this.count === 0 || this.max >= this.count)
+				this.fire(EVT_MAX);
 			
 			if(this.get('autoRepeat') > 0)
 				this.startTimer();
@@ -109,20 +113,27 @@ Y.Base,
 		_processResult:function(transactionid,res){
 			var status		= res.status,
 				event		= status < 300 ? EVT_LOAD : EVT_ERROR,
-				content		= res.responseText,
+				newContent 	= content = res.responseText,
 				selector 	= this.get('contentSelector'),
 				e			= {
 								start		: this.start,
-								content     : content,
+								original    : content,
 								responseText: res.responseText,
 								status      : status
 							};
 
 			if(event === EVT_LOAD){
-				if(selector !== null && content){
-					e.content = Y.Node.create(content).one(selector).get('innerHTML');
-				}
+				if(newContent){
+					
+					newContent = Y.Node.create(newContent);
+					
+					if(selector !== null){
+						newContent = newContent.one(selector);
+					}
+				}	
 			}
+			
+			e.content = newContent;
 			
 			this.loading = false;
 			
@@ -136,7 +147,10 @@ Y.Base,
 			var container = this.get(SRC);
 
 			if (container && e.content) {
-				var anim = this.get('anim'),
+			
+				//if we insert any content into a Node.create here that is considered invalid, YUI just removes it, e.g. tr.
+				//So we can only animate when we are working with div based nodes
+				var anim = e.content.one('> div') && this.get('anim'),
 				content = e.content.get('innerHTML');
 				
 				content = Y.Node.create(anim? '<div style="opacity:0;">' + content + '</div>' : content);
@@ -148,12 +162,15 @@ Y.Base,
 					container.prepend(content);
 				}
 				
-				//If we have in-line javascript withing the retrieved HTML, it will not be executed by appending the content to the dom
+				//If we have in-line javascript within the retrieved HTML, it will not be executed by appending the content to the dom
 				//So we need to get all the script elements and evaluate them
-				var script = content.all('script').get('innerHTML').join("");
+				if(this.get('processJSNodes')){
 				
-				Y.log('Evaluating script: ' + script);
-				eval(script);
+					//We need to evaluate javascript from the entire page, not just the selected content
+					var script = Y.Node.create(e.original).all('script').get('innerHTML').join("");
+					
+					eval(script);
+				}
 
 				
 				if(anim){
@@ -178,11 +195,15 @@ Y.Base,
 		* {dte} : current date time in millis
 		*/
 		_getUrl:function(url,start,max){
+			if(this.get("addPjaxParam")){
+				url += url.indexOf("?") > -1? "&" : "?";
+				url += "pjax=1";
+			}
 			
 			if(url.indexOf('{st}') > -1){
-				return Y.Lang.sub(this.get('url'),{
-					start: start,
-					max: max,
+				return Y.Lang.sub(url,{
+					st: start,
+					mx: max,
 					dte: new Date().getMilliseconds()
 				});
 			}
@@ -265,11 +286,23 @@ Y.Base,
 			*/
 			contentSelector:{
 				value:null
+			},
+			/**
+			* Evaluates the content of any Javascript nodes found in the retrieved content
+			*/
+			processJSNodes:{
+				value:true
+			},
+			/**
+			* Appends a variable to every request: pjax=1
+			*/
+			addPjaxParam:{
+				value:true
 			}
 		}
 });
 
-Y[NME] = MoreLoader;
+Y.MoreLoader = MoreLoader;
 
 
 
