@@ -16,25 +16,37 @@
 			currentX : null,
 			lastX : null,
 			renderUI : function() {
+
 				this.src = this.get('srcNode').addClass(this.getClassName('hidden'));
+				
+				//we have to remove any label around a checkbox to prevent erronous selecting
+				var lbl = this.get(CBX).ancestor("label");
+				if(lbl){
+					lbl.setAttribute("for",Math.random());
+				}
 				this.get(CBX).append(this._makeNode()).append(this.src);
 				
 				this._locateNodes();
 
-				var leftX = this._labelOnNode.one('div').get('offsetWidth'),
-				rightX = this._labelOffNode.one('div').get('offsetWidth'), 
-				width = this._labelOnNode.get('offsetWidth'),
+				var onNode = this._labelOnNode,
+				offNode = this._labelOffNode,
+				onDiv = onNode.one('div'),
+				offDiv = offNode.one('div'),
+				leftX = onDiv.get('offsetWidth'),
+				rightX = offDiv.get('offsetWidth'), 
+				//width is the widest
+				width = onNode.get('offsetWidth'),
 				skin = this.getSkinName(),
-				ios5 = skin? skin.indexOf('ios5') > -1 : null;
-
+				ios5 = skin? skin.indexOf('ios5') > -1 : null;				
+				
 				if(leftX > rightX){
-					this._labelOffNode.one('div').setStyle('width',leftX);
+					offDiv.setStyle('width',leftX);
 				}else{
-					this._labelOnNode.one('div').setStyle('width',rightX);
-					width = this._labelOnNode.get('offsetWidth');
+					onDiv.setStyle('width',rightX);
+					width = onNode.get('offsetWidth');
 				}
 				
-				this.left = -this._labelOnNode.get('offsetWidth') + 3;
+				this.left = -onNode.get('offsetWidth') + 3;
 
 				var wrapperWidth = 2 * width;
 				
@@ -59,7 +71,18 @@
 				}),
 				cb = this.get(CBX);
 				
+				this.dd = dd;
+				
 				this._addDragConstraint(dd);
+				
+				dd.on('drag:mouseup',function(e){
+
+					//Detect a click in stead of a drag
+					if(dd.lastXY[0] === dd.nodeXY[0]){
+						this.move();
+					}
+					
+				}, this);
 				
 				dd.on('drag:drag',function(e){
 					var xy = this._wrapperNode.getXY();
@@ -71,14 +94,18 @@
 						e.halt(true);
 					}
 					
-					if(dd.actXY[0] % 2 === 0){
+					if(Math.round(dd.actXY[0]) % 2 === 0){
 						this.lastX = this.currentX;
 					}
+					
 					this.currentX = dd.actXY[0];
 					
 				}, this);
 				
-				dd.on('drag:end',this.move, this);
+				dd.on('drag:end',function(e){
+					this.currentX = dd.actXY[0];
+					this.move();
+				}, this);
 				
 				cb.on('focus',function(){
 					cb.on('key',this.goLeft,'down:37',this);
@@ -92,12 +119,12 @@
 					cb.detach('key');
 					cb.blur();
 				},this);
+				
 			},syncUI : function(){
-				this._sliderwrapNode.setStyle('left',
-					this.src.get('checked')?  0 : this.left
-				);
+				this._sliderwrapNode.setStyle('left',this.src.get('checked')?  0 : this.left);
 			},destructor : function(){
 				this.anim && this.anim.stop().destroy();
+				this.dd && this.dd.destroy();
 				this.src=null;
 			},
 			goLeft : function(){
@@ -111,19 +138,19 @@
 			move : function(){
 				this.from = this._replacePx(this._sliderwrapNode.getComputedStyle('left'));
 				
-				if(this.lastX !== null){
-					Y.log("current: " + this.currentX + ", last: " + this.lastX  + ", left: " + this.left);
+				if(this.dd.lastXY[0] !== this.dd.nodeXY[0]){
 					if(this.currentX < this.lastX || this.from === this.left){
 						this.goLeft();
 					}else{
 						this.goRight();
 					}
-				}
-				
-				if(this.from > this.left){
-					this.goLeft();
 				}else{
-					this.goRight();
+				
+					if(this.from === 0){
+						this.goLeft();
+					}else{
+						this.goRight();
+					}
 				}
 			},
 			_addDragConstraint : function(dd){
@@ -140,16 +167,26 @@
 			_defaultCB : function(el) {
 				return null;
 			},
-			_onClick : function(e){
-				e.preventDefault();
-				this.move();
-			},
 			_execute : function(){
+				
 				this.focus();
+				
 				if(this.disabled){
 					return;
 				}
+				
 				this.src.set('checked',!this.src.get('checked'));
+				
+				Y.log( 
+					"checked:" + this.src.get('checked') + '<br/>' + 
+					"this.from:" + this.from + "<br/>" + 
+					"this.currentX:" + this.currentX + "<br/>" + 
+					"this.lastX:" + this.lastX + "<br/>" +
+					"this.left:" + this.left + "<br/>" +
+					"this.dd.lastXY[0]:" + this.dd.lastXY[0] + "<br/>" + 
+					"this.dd.nodeXY[0]:" + this.dd.nodeXY[0] + "<br/>********"
+					);
+				
 				if(this.anim === null){
 					this.anim = new Y.Anim({
 						node: this._sliderwrapNode,
@@ -164,10 +201,9 @@
 				this.anim.set('to',{left:this.to});
 				this.anim.run();
 
-				Y.log("New value: " + this.src.get('checked'));
 			},
 			_replacePx : function(el){
-				return parseInt(el.replace('px',''));
+				return parseInt(el.replace('px',''),10);
 			}
 		},
 		{
@@ -189,11 +225,6 @@
 				'<div class="{c labelOff}"><label><div>{s labelOff}</div></label></div>',
 				'</div></div></div>'
 			].join('\n'),
-			_EVENTS:{
-				slider: [
-					{type: 'click',fn:'_onClick'}
-				]
-			},
 			HTML_PARSER: {
 				value: function (srcNode) {
 					return srcNode.getAttribute('checked'); 
