@@ -9,6 +9,10 @@ There is a default skin, which is based on the project I created this for, and a
 
 For optimization purposes, I chose to use a page based delegate that operates on the nodelist. 
 
+Demo
+-------
+[Demo](http://jsfiddle.net/wWkq4/)
+
 Usage
 -------
 
@@ -34,4 +38,5 @@ Current limitations
  
 * This doesn't work in IE8
 * Since Ratchet is strongly based on CSS and Ratchet uses some fixed widths where it shouldn't, we currently don't support multilingual versions. We hope we can in the near future.
+* If the checkbox is modified by javascript, this will not automatically be reflected in the widget
 
