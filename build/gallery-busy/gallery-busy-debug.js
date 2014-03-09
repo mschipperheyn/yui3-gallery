@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 YUI.add('gallery-busy', function(Y) {
+=======
+YUI.add('gallery-busy', function (Y, NAME) {
+>>>>>>> upstream/master
 
 "use strict";
 
@@ -198,6 +202,21 @@ Y.extend(Busy, Y.Base,
 Y.namespace("MSA");
 Y.MSA.Busy = Busy;
 
+<<<<<<< HEAD
 
 
 }, '@VERSION@' ,{skinnable:true, requires:['base','node-base','node-style','event-tap','event-delegate','node-screen','event-custom']});
+=======
+}, 'gallery-2012.12.05-21-01', {
+    "skinnable": "true",
+    "requires": [
+        "base",
+        "node-base",
+        "node-style",
+        "event-tap",
+        "event-delegate",
+        "node-screen",
+        "event-custom"
+    ]
+});
+>>>>>>> upstream/master

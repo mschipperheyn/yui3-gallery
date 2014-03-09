@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 YUI.add('gallery-more-loader', function(Y) {
+=======
+YUI.add('gallery-more-loader', function (Y, NAME) {
+>>>>>>> upstream/master
 
 /**
 * You supply url, start, count and max variables in the container node as data-attributes
@@ -304,6 +308,10 @@ Y.Base,
 
 Y.MoreLoader = MoreLoader;
 
+<<<<<<< HEAD
 
 
 }, '@VERSION@' ,{requires:['node-base','io-base','transition']});
+=======
+}, 'gallery-2012.12.05-21-01', {"requires": ["node-base", "io-base", "transition"]});
+>>>>>>> upstream/master

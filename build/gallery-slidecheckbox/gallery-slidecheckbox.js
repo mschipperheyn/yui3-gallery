@@ -203,5 +203,9 @@ YUI.add('gallery-slidecheckbox', function(Y) {
 	);
 
 
+<<<<<<< HEAD
 
 }, '@VERSION@' ,{optional:['node-base', 'anim-base', 'anim-easing', 'base-build', 'event-key', 'event-move', 'widget', 'node-style', 'gallery-makenode', 'dd-drag', 'dd-constrain'], requires:['node-base', 'anim-base', 'anim-easing', 'base-build', 'event-key', 'event-move', 'widget', 'node-style', 'gallery-makenode', 'dd-drag', 'dd-constrain'], skinnable:true});
+=======
+}, 'gallery-2012.11.07-21-32' ,{skinnable:true, requires:['node-base', 'anim-base', 'anim-easing', 'base-build', 'event-key', 'event-move', 'widget', 'node-style', 'gallery-makenode', 'dd-drag', 'dd-constrain']});
+>>>>>>> upstream/master

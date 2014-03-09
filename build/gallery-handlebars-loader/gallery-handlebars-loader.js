@@ -128,5 +128,9 @@ Y.namespace('MSA');
 Y.MSA.HandlebarsLoader = HandlebarsLoader;
 
 
+<<<<<<< HEAD
 
 }, '@VERSION@' ,{skinnable:false, requires:['node-base','handlebars-base','handlebars-compiler','base-base','io-base']});
+=======
+}, 'gallery-2012.08.15-20-00' ,{requires:['node-base','handlebars-base','handlebars-compiler','base-base','io-base'], skinnable:false});
+>>>>>>> upstream/master

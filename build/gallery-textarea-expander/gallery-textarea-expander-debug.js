@@ -58,5 +58,9 @@ Y.extend(TextareaExpander, Y.Plugin.Base, {
 Y.TextareaExpander = TextareaExpander;
 
 
+<<<<<<< HEAD
 
 }, '@VERSION@' ,{requires:['plugin','node-style'], skinnable:true});
+=======
+}, 'gallery-2012.11.07-21-32' ,{skinnable:true, requires:['plugin','node-style']});
+>>>>>>> upstream/master

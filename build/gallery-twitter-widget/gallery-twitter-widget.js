@@ -290,5 +290,9 @@ Twitter = Y.Base.create("Twitter", Y.Widget, [], {
 Y.namespace('Twitter').Status = Twitter;
 
 
+<<<<<<< HEAD
 
 }, '@VERSION@' ,{skinnable:true, requires:['widget-base','substitute', 'gallery-torelativetime', 'jsonp', 'base-build']});
+=======
+}, 'gallery-2012.11.07-21-32' ,{requires:['widget-base','substitute', 'gallery-torelativetime', 'jsonp', 'base-build'], skinnable:true});
+>>>>>>> upstream/master
