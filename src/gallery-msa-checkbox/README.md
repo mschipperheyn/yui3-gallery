@@ -33,5 +33,5 @@ Current limitations
 -------
  
 * This doesn't work in IE8
-* Since Ratchet is strongly based on CSS and Ratchet uses some fixed widths where it shouldn't we currently don't support multilingual versions. We hope we can in the near future.
+* Since Ratchet is strongly based on CSS and Ratchet uses some fixed widths where it shouldn't, we currently don't support multilingual versions. We hope we can in the near future.
 
