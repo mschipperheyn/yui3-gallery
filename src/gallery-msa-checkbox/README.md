@@ -1,7 +1,7 @@
 MSA-Checkbox
 =============
 
-MSA-Checkbox is a YUI 3 port of [Ratchet 2.0](https://github.com/twbs/ratchet)'s Toggle.
+MSA-Checkbox is a YUI 3 port of [Ratchet 2.0](https://github.com/twbs/ratchet)'s Toggle. There is no dependency on Twitter Bootstrap.
 
 Some minor modifications were done. In stead of On/Off, we use I/O to not be bothered with international aspects.
 
