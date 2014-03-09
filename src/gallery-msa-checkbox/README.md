@@ -13,9 +13,11 @@ Usage
 -------
 
 	Y.use('msa-checkbox', function(A){
-    	new A.MSA.Checkbox({srcNodes:nodeList});
+    	new A.MSA.Checkbox({srcNodes:Y.all('.msa-checkbox')});
     });
 
+	<input type="checkbox" name="test" class="msa-checkbox">
+	
 Using a skin
 -------
 	
