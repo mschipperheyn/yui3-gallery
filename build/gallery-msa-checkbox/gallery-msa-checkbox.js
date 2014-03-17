@@ -15,6 +15,7 @@ var HANDLE = '.toggle-handle',
 	CHECKBOX = 'input[type=checkbox]',
 	READONLY = 'readonly',
 	DISABLED = 'disabled',
+	CHECKED = 'checked',
 	WEBKITTRANSFORM = 'webkitTransform',
 	WIDTH = 'clientWidth',
 	ACTIVE = 'active',
@@ -40,7 +41,7 @@ Y.extend(Checkbox, Y.Base, {
 			}
 	
 			node.insert(Y.Lang.sub(TEMPLATE,{
-				active:node.get('checked')? ACTIVE : ''
+				active:node.get(CHECKED)? ACTIVE : ''
 			}),'after');
 
 		});
@@ -69,10 +70,10 @@ Y.extend(Checkbox, Y.Base, {
 		
 		this._handles.push(
 			Y.delegate('gesturemove', function (e) {
-				/*
+				
 				if (e.touches.length > 1) {
 					return; // Exit if a pinch
-				}*/
+				}
 
 				var toggle = e.currentTarget,
 				handle      = toggle.one(HANDLE),
@@ -116,6 +117,8 @@ Y.extend(Checkbox, Y.Base, {
 				offset      = (toggleWidth - handleWidth),
 				slideOn     = (!touchMove && !toggle.hasClass(ACTIVE)) || (touchMove && (distanceX > (toggleWidth/2 - handleWidth/2)));
 
+
+				
 				if(toggle.previous(CHECKBOX).get(DISABLED))
 					return;
 
@@ -125,16 +128,15 @@ Y.extend(Checkbox, Y.Base, {
 					handle.setStyle(WEBKITTRANSFORM, TRANSLATE3D + '(0,0,0)');
 				}
 
-
 				toggle.toggleClass(ACTIVE, slideOn)
-				.previous(CHECKBOX).set('checked',slideOn);
+					.previous(CHECKBOX)
+					.set(CHECKED,slideOn);
 				
 				this.fire('toggle', {
 					isActive: slideOn
 				});
 
 				touchMove = false;
-				toggle    = false;
 			
 			},'body','.toggle',this)
 		);

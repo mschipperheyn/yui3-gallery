@@ -13,6 +13,7 @@ var HANDLE = '.toggle-handle',
 	CHECKBOX = 'input[type=checkbox]',
 	READONLY = 'readonly',
 	DISABLED = 'disabled',
+	CHECKED = 'checked',
 	WEBKITTRANSFORM = 'webkitTransform',
 	WIDTH = 'clientWidth',
 	ACTIVE = 'active',
@@ -38,7 +39,7 @@ Y.extend(Checkbox, Y.Base, {
 			}
 	
 			node.insert(Y.Lang.sub(TEMPLATE,{
-				active:node.get('checked')? ACTIVE : ''
+				active:node.get(CHECKED)? ACTIVE : ''
 			}),'after');
 
 		});
@@ -61,17 +62,17 @@ Y.extend(Checkbox, Y.Base, {
 				start     = { pageX : e.pageX - offset, pageY : e.pageY };
 				touchMove = false;
 			
-				Y.log('Move: offset:' + offset + 'e.pageX: ' + e.pageX + 'pageY' + e.pageX);
+				Y.log('Move start. Move: offset:' + offset + 'e.pageX: ' + e.pageX + 'pageY' + e.pageX);
 			
 			},'body','.toggle',this)
 		);
 		
 		this._handles.push(
 			Y.delegate('gesturemove', function (e) {
-				/*
+				
 				if (e.touches.length > 1) {
 					return; // Exit if a pinch
-				}*/
+				}
 
 				var toggle = e.currentTarget,
 				handle      = toggle.one(HANDLE),
@@ -84,7 +85,7 @@ Y.extend(Checkbox, Y.Base, {
 				touchMove = true;
 				distanceX = current.pageX - start.pageX;
 
-				Y.log('Move: distanceX:' + distanceX + 'current.pageX: ' + current.pageX + 'start.pageX' + start.pageX);
+				Y.log('Move start: distanceX:' + distanceX + 'current.pageX: ' + current.pageX + 'start.pageX' + start.pageX);
 
 				if (Math.abs(distanceX) < Math.abs(current.pageY - start.pageY) || toggle.previous(CHECKBOX).get(DISABLED)) {
 					return;
@@ -116,6 +117,10 @@ Y.extend(Checkbox, Y.Base, {
 				offset      = (toggleWidth - handleWidth),
 				slideOn     = (!touchMove && !toggle.hasClass(ACTIVE)) || (touchMove && (distanceX > (toggleWidth/2 - handleWidth/2)));
 
+				Y.log('MoveEnd: touchMove: ' + touchMove + ', distanceX: ' + distanceX + ', toggleWidth: ' + toggleWidth + ', handleWidth:' + handleWidth + ', slideOn: ' + slideOn);
+
+				Y.log('MoveEnd: checkbox: ' + toggle.previous(CHECKBOX).get(CHECKED));
+				
 				if(toggle.previous(CHECKBOX).get(DISABLED))
 					return;
 
@@ -125,17 +130,15 @@ Y.extend(Checkbox, Y.Base, {
 					handle.setStyle(WEBKITTRANSFORM, TRANSLATE3D + '(0,0,0)');
 				}
 
-				Y.log('MoveEnd: slideOn: ' + slideOn);
-
 				toggle.toggleClass(ACTIVE, slideOn)
-				.previous(CHECKBOX).set('checked',slideOn);
+					.previous(CHECKBOX)
+					.set(CHECKED,slideOn);
 				
 				this.fire('toggle', {
 					isActive: slideOn
 				});
 
 				touchMove = false;
-				toggle    = false;
 			
 			},'body','.toggle',this)
 		);
